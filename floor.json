@@ -1,0 +1,91 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "stroke-width": 0,
+        "stroke-opacity": 1,
+        "stroke": "#000000",
+        "fill": "#2cd9f4",
+        "fill-opacity": 0.5,
+        "roomid": "uniqueid",
+        "roomname": "Very cool room",
+        "temperature": 15,
+        "humidity": 20,
+        "utilization-current": 5,
+        "utiliaztion-capacity": 10
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.07352364063263,
+              59.34667842383335
+            ],
+            [
+              18.07365506887436,
+              59.34665107375364
+            ],
+            [
+              18.073692619800568,
+              59.34670303888627
+            ],
+            [
+              18.073571920394897,
+              59.346722183915105
+            ],
+            [
+              18.07352364063263,
+              59.34667842383335
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "stroke": "#555555",
+        "stroke-width": 0,
+        "stroke-opacity": 1,
+        "fill": "#de4444",
+        "fill-opacity": 0.5,
+        "roomid": "anotherid",
+        "roomname": "Very hot room",
+        "temperature": 30,
+        "humidity": 50,
+        "utilization-current": 1,
+        "utilization-capacity": 10
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              18.07366579771042,
+              59.34665107375364
+            ],
+            [
+              18.073770403862,
+              59.346629193674005
+            ],
+            [
+              18.073807954788208,
+              59.34667295381918
+            ],
+            [
+              18.073714077472683,
+              59.34669620137337
+            ],
+            [
+              18.07366579771042,
+              59.34665107375364
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "roomname": "Very cool room",
+  "temperature": [10,11,12,11,12],
+  "humidity": [20,20,20,20,20],
+  "utilization-current": [0,2,2,2,5],
+  "utiliaztion-capacity": 10
+}
