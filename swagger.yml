@@ -1,0 +1,131 @@
+schemes:
+  - http
+  - https
+
+paths:
+  /{buildingid}/{floorid}:
+    get:
+      description: Returns a GeoJSON object containing polygons for every room on the floor and each polygon as a unique room id property.
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: A GeoJSON object.
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                  - FeatureCollection
+              features:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - Feature
+                    properties:
+                      type: object
+                      required:
+                        - id
+                        - fill
+                      properties:
+                        id:
+                          type: uuid
+                          description: A unique room identifier.
+                        fill:
+                          type: string
+                          description: A color based on sensor data.
+                      additionalProperties:
+                        type: string
+                    geometry:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - Polygon
+                        coordinates:
+                          type: array
+                          items:
+                            type: array
+                            items:
+                              type: int
+
+            example:
+              type: FeatureCollection
+              features:
+                  type: Feature
+                  properties:
+                    stroke-width: 0
+                    stroke-opacity: 1
+                    stroke: "#000000"
+                    fill: "#2cd9f4"
+                    fill-opacity: 0.5
+                    id: ac64-ce8a-11e5
+                  geometry:
+                    type: Polygon
+                    coordinates:
+                        -
+                          - 18.07352364063263
+                          - 59.34667842383335
+                        - 
+                          - 18.07365506887436
+                          - 59.34665107375364
+                        - 
+                          - 18.073692619800568
+                          - 59.34670303888627
+                        - 
+                          - 18.07352364063263
+                          - 59.34667842383335
+
+  /{buildingid}/{floorid}/{roomid}:
+    get:
+      description: Returns meta data about the room and current sensor data.
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: A JSON object.
+          schema:
+            type: object
+            required:
+              - id
+              - name
+            properties:
+              id:
+                type: uuid
+                description: A unique id for the room
+              name:
+                type: string
+                description: a name for the room
+              data:
+                type: object
+                description: Object sensor data
+                properties:
+                  temperature:
+                    type: int
+                  humidity:
+                    type: int
+                  utilization-current:
+                    type: int
+                  utiliaztion-capacity:
+                    type: int
+            example:
+              id: abc123
+              name: Some room
+              data:
+                temperature: 20
+                humidity: 10
+
+  /{buildingid}/{floorid}/{roomid}/{period}:
+    get:
+      description: Returns historical data for the specified room during the specified period.
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: A JSON object that can be plugged into a graphing library.
