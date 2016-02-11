@@ -1,131 +1,174 @@
+swagger: '2.0'
+info:
+  title: MVK
+  description: API specification for a MVK project
+  version: '0.0.2'
+
+host: localhost
+
 schemes:
   - http
   - https
 
+basePath: /
+
+produces:
+  - application/json
+
 paths:
+  /{buildingid}:
+    get:
+      description: Returns a list of floors in the specified building
+      produces:
+        - application/json
+      parameters:
+        - name: buildingid
+          in: path
+          description: Some building id
+          required: true
+          type: UUID
+      responses:
+        200:
+          description: A list of ids
+          schema:
+            type: object
+            properties:
+              floors: 
+                type: array
+                items:
+                  type: integer
+            example:
+              floors:
+                 - 1
+                 - 2
+                 - 3
+        404:
+          description: Building does not exist
+
   /{buildingid}/{floorid}:
     get:
       description: Returns a GeoJSON object containing polygons for every room on the floor and each polygon as a unique room id property.
       produces:
         - application/json
+      parameters:
+        - name: buildingid
+          in: path
+          description: Some building id
+          required: true
+          type: UUID
+        - name: floorid
+          in: path
+          description: A floor id
+          required: true
+          type: integer
       responses:
-        '200':
-          description: A GeoJSON object.
+        200:
+          description: A GeoJSON object with an aditional required id property
           schema:
             type: object
-            properties:
-              type:
-                type: string
-                enum:
-                  - FeatureCollection
-              features:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    type:
-                      type: string
-                      enum:
-                        - Feature
-                    properties:
-                      type: object
-                      required:
-                        - id
-                        - fill
-                      properties:
-                        id:
-                          type: uuid
-                          description: A unique room identifier.
-                        fill:
-                          type: string
-                          description: A color based on sensor data.
-                      additionalProperties:
-                        type: string
-                    geometry:
-                      type: object
-                      properties:
-                        type:
-                          type: string
-                          enum:
-                            - Polygon
-                        coordinates:
-                          type: array
-                          items:
-                            type: array
-                            items:
-                              type: int
 
             example:
               type: FeatureCollection
               features:
-                  type: Feature
+                - type: Feature
                   properties:
                     stroke-width: 0
                     stroke-opacity: 1
-                    stroke: "#000000"
-                    fill: "#2cd9f4"
+                    stroke: '#000000'
+                    fill: '#2cd9f4'
                     fill-opacity: 0.5
                     id: ac64-ce8a-11e5
                   geometry:
                     type: Polygon
                     coordinates:
-                        -
-                          - 18.07352364063263
-                          - 59.34667842383335
-                        - 
-                          - 18.07365506887436
-                          - 59.34665107375364
-                        - 
-                          - 18.073692619800568
-                          - 59.34670303888627
-                        - 
-                          - 18.07352364063263
-                          - 59.34667842383335
+                        - - 18.073523640
+                          - 59.346678423
+                        - - 18.073655068
+                          - 59.346651073
+                        - - 18.073692619
+                          - 59.346703038
+                        - - 18.073523640
+                          - 59.346678423
+        404:
+          description: Floor does not exist
 
   /{buildingid}/{floorid}/{roomid}:
     get:
-      description: Returns meta data about the room and current sensor data.
+      description: Get meta data and current sensor values for a specific room
       produces:
         - application/json
+      parameters:
+        - name: buildingid
+          in: path
+          description: Some building id
+          required: true
+          type: UUID
+        - name: floorid
+          in: path
+          description: A floor id
+          required: true
+          type: integer
+        - name: roomid
+          in: path
+          description: A room id
+          required: true
+          type: UUID
       responses:
-        '200':
-          description: A JSON object.
+        200:
+          description: A JSON object
           schema:
             type: object
-            required:
-              - id
-              - name
             properties:
               id:
-                type: uuid
-                description: A unique id for the room
+                type: UUID
               name:
                 type: string
-                description: a name for the room
               data:
-                type: object
-                description: Object sensor data
-                properties:
-                  temperature:
-                    type: int
-                  humidity:
-                    type: int
-                  utilization-current:
-                    type: int
-                  utiliaztion-capacity:
-                    type: int
-            example:
-              id: abc123
-              name: Some room
-              data:
-                temperature: 20
-                humidity: 10
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      type: float
+                    lastupdate:
+                      type: datetime
 
-  /{buildingid}/{floorid}/{roomid}/{period}:
+            example:
+              id: ac64-ce8a-11e5
+              name: Very cool room
+              data:
+                - name: temperature
+                  value: -1
+                - name: humidity
+                  value: 0.1
+        404:
+          description: Room does not exist
+
+  /{buildingid}/{floorid}/{roomid}/history:
     get:
-      description: Returns historical data for the specified room during the specified period.
+      description: Get historical data for a specific room
       produces:
         - application/json
+      parameters:
+        - name: buildingid
+          in: path
+          description: Some building id
+          required: true
+          type: UUID
+        - name: floorid
+          in: path
+          description: A floor id
+          required: true
+          type: integer
+        - name: roomid
+          in: path
+          description: A room id
+          required: true
+          type: UUID
       responses:
-        '200':
-          description: A JSON object that can be plugged into a graphing library.
+        200:
+          description: Some JSON object suitable for undecided graphing library
+        404:
+          description: Room does not exist
